@@ -16,6 +16,8 @@ import com.expensetracker.user.User;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/expenses")
 public class ExpenseController {
@@ -27,7 +29,7 @@ public class ExpenseController {
     private UserRepository userRepository;
 
     @PostMapping
-    public ResponseEntity<?> createExpense(@RequestBody ExpenseRequest expenseRequest, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> createExpense(@Valid @RequestBody ExpenseRequest expenseRequest, @AuthenticationPrincipal UserDetails userDetails) {
         Expense createdExpense = expenseService.createExpense(expenseRequest, userDetails.getUsername());
 
         return ResponseEntity.ok(
