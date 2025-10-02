@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Backend Service (Spring Boot)
+  backend:
+    build:
+      context: ./backend
+    container_name: expense-tracker-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/expensetracker
+      - SPRING_DATASOURCE_USERNAME=local
+      - SPRING_DATASOURCE_PASSWORD=local
+      - JWT_SECRET=your-very-secure-jwt-secret-key-change-this
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  # Frontend Service (React) - Placeholder
+  frontend:
+    build:
+      context: ./frontend
+    container_name: expense-tracker-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  # Database Service (PostgreSQL)
+  db:
+    image: postgres:14-alpine
+    container_name: expense-tracker-db
+    environment:
+      POSTGRES_DB: expensetracker
+      POSTGRES_USER: local
+      POSTGRES_PASSWORD: local
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
